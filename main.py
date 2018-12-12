@@ -7,9 +7,10 @@ from order import Order
 def main():
     filename = 'busy_day.in'
     orders, warehouses = import_txt(filename)
-    print(total_stocks(orders=orders, warehouses=warehouses))
-    print(orders[0].bought)
-    max_distance(warehouses)
+    q1 = total_stocks(orders=orders, warehouses=warehouses)
+    q2 = max_weight(orders)
+    q3 = max_distance(warehouses)
+    export_txt('busy_day.out', q1, q2, q3)
     return
 
 
@@ -40,10 +41,21 @@ def import_txt(filename):
         prod = [0] * P
         for item in deli:
             prod[int(item)] += 1
-        # order = {'x': int(cords[0]), 'y': int(cords[1]), 'bought': prod, 'items': items}
-        order = Order(int(cords[0]), int(cords[1]), prod, items)
+        order = Order(int(cords[0]), int(cords[1]), prod, C_a)
         orders.append(order)
     return orders, warehouses
+
+
+def export_txt(file, q1, q2, q3):
+    out = open(file, 'w')
+    out.write('Google hashcode 2016 | Delivery | Inputfile: {} \n\n'.format(file))
+    out.write('1. Totale resterende stock berekenen van alle magazijnen samen nadat alle orders uitgevoerd zijn. M.a.w.: wat ligt er nog in de magazijnen nadat alle bestellingen geleverd zijn? \n')
+    out.write('De totale stock: {} \n\n'.format(q1))
+    out.write('2. Welke order(s) weegt/wegen het zwaarst? Hoe zwaar weegt deze order? \n')
+    out.write('Dit product weegt het zwaarst: {}\n\n'.format(q2))
+    out.write('3. Welke 2 magazijnen liggen het verst uit elkaar? \n')
+    out.write('De coordinaten zijn: ({}, {}) en ({}, {})\n'.format(q3[0].x, q3[0].y, q3[1].x, q3[1].y))
+
 
 
 def total_stocks(orders, warehouses):
@@ -56,13 +68,21 @@ def total_stocks(orders, warehouses):
 
 
 def max_weight(orders):
-    return max(order.totalweight for order in orders)
+    return max([order.totalweight for order in orders])
 
 
 def max_distance(warehouses):
+    wh1 = None
+    wh2 = None
+    max_dist = 0
     for j in warehouses:
         for k in warehouses:
-            print(j.distance_to(k))
+            t = j.distance_to(k)
+            if t > max_dist:
+                max_dist = t
+                wh1 = j
+                wh2 = k
+    return wh1, wh2
 
 
 if __name__ == '__main__':

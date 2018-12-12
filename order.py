@@ -8,7 +8,6 @@ class Order:
     pass
 
     def total_weight(self):
-        print(self.weights)
-        return sum([int(a) * b for a, b in zip(str(self.weights), self.bought)])
+        return sum([int(a) * b for a, b in zip(self.weights, self.bought)])
 
 
